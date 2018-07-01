@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MapDirectionDemo</string>
+    <string name="source_default_name">Please tap to select source location</string>
+    <string name="destination_default_name">Please tap to select Destination location</string>
+</resources>

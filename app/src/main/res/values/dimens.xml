@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="source_layout_hieght">30dp</dimen>
+    <dimen name="destination_layout_hieght">30dp</dimen>
+    <dimen name="places_layout_margin_left">20dp</dimen>
+    <dimen name="places_layout_margin_right">20dp</dimen>
+    <dimen name="default_top_margin">10dp</dimen>
+</resources>
