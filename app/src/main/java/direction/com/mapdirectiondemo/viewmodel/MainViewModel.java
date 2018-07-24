@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import direction.com.mapdirectiondemo.MainActivity;
 import direction.com.mapdirectiondemo.R;
-import direction.com.mapdirectiondemo.Util.RetrofitClient;
+import direction.com.mapdirectiondemo.Util.App;
 import direction.com.mapdirectiondemo.models.LegsItem;
 import direction.com.mapdirectiondemo.models.RoutesItem;
 import direction.com.mapdirectiondemo.models.StepsItem;
@@ -95,10 +95,9 @@ public class MainViewModel extends BaseObservable {
     public void getDirection(LatLng source, LatLng destination) {
 
 
-        RetrofitClient
+        App
                 .getInstance()
-                .getDirectionAPI()
-                .getDirections(source.latitude + "," + source.longitude, destination.latitude + "," + destination.longitude, false)
+                .getDirectionAPI().getDirections(source.latitude + "," + source.longitude, destination.latitude + "," + destination.longitude, false)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(directionResult -> {
