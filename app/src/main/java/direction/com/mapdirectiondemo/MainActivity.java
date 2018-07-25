@@ -26,21 +26,25 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 
 import direction.com.mapdirectiondemo.databinding.ActivityMainBinding;
+import direction.com.mapdirectiondemo.dependencies.components.DaggerHomeUseCaseComponent;
 import direction.com.mapdirectiondemo.dependencies.components.DaggerMainViewModelComponent;
+import direction.com.mapdirectiondemo.dependencies.components.HomeUseCaseComponent;
 import direction.com.mapdirectiondemo.dependencies.components.MainViewModelComponent;
 import direction.com.mapdirectiondemo.dependencies.module.MainViewModelModule;
 import direction.com.mapdirectiondemo.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    SupportMapFragment mSupportMapFragment;
-    ActivityMainBinding mActivityMainBinding;
-    MainViewModel mMainViewModel;
+    private SupportMapFragment mSupportMapFragment;
+    private ActivityMainBinding mActivityMainBinding;
+    private MainViewModel mMainViewModel;
     private GoogleMap mGoogleMap;
-    Place mSource;
-    Place mDestination;
-    Marker sourceMarker;
-    Marker destinationMarker;
+    private Place mSource;
+    private Place mDestination;
+    private Marker mSourceMarker;
+    private Marker mDestinationMarker;
+    private MainViewModelComponent mMainViewModelComponent;
+    private HomeUseCaseComponent mUseCaseComponent;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -49,11 +53,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        MainViewModelComponent component = DaggerMainViewModelComponent
+        mMainViewModelComponent = DaggerMainViewModelComponent
                 .builder()
                 .mainViewModelModule(new MainViewModelModule(this))
                 .build();
-        mMainViewModel = new MainViewModel(component);
+
+        mUseCaseComponent = DaggerHomeUseCaseComponent.builder().build();
+
+        mMainViewModel = new MainViewModel(mMainViewModelComponent, mUseCaseComponent);
         mSupportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mSupportMapFragment.getMapAsync(this);
         mActivityMainBinding.setMainModel(mMainViewModel);
@@ -111,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (resultCode == RESULT_OK) {
                 mSource = PlaceAutocomplete.getPlace(this, data);
                 mMainViewModel.setSourceName(mSource.getName().toString());
-                sourceMarker = addMarker(mSource.getLatLng());
+                mSourceMarker = addMarker(mSource.getLatLng());
                 Log.i(TAG, "Place: " + mSource.getName());
             }
 
@@ -120,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (resultCode == RESULT_OK) {
                 mDestination = PlaceAutocomplete.getPlace(this, data);
                 mMainViewModel.setDestinationName(mDestination.getName().toString());
-                destinationMarker = addMarker(mDestination.getLatLng());
+                mDestinationMarker = addMarker(mDestination.getLatLng());
                 Log.i(TAG, "Place: " + mDestination.getName());
             }
 
@@ -132,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else if (resultCode == RESULT_CANCELED) {
             // The user canceled the operation.
         }
-        if (sourceMarker != null && destinationMarker != null) {
+        if (mSourceMarker != null && mDestinationMarker != null) {
             zoomMap();
 
         }
@@ -149,8 +156,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void zoomMap() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        builder.include(sourceMarker.getPosition());
-        builder.include(destinationMarker.getPosition());
+        builder.include(mSourceMarker.getPosition());
+        builder.include(mDestinationMarker.getPosition());
         LatLngBounds bounds = builder.build();
         int padding = 200; // offset from edges of the map in pixels
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
