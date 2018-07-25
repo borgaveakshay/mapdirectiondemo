@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.ObservableField;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.android.databinding.library.baseAdapters.BR;
@@ -16,9 +15,11 @@ import java.util.ArrayList;
 import direction.com.mapdirectiondemo.MainActivity;
 import direction.com.mapdirectiondemo.R;
 import direction.com.mapdirectiondemo.Util.App;
+import direction.com.mapdirectiondemo.dependencies.components.MainViewModelComponent;
 import direction.com.mapdirectiondemo.models.LegsItem;
 import direction.com.mapdirectiondemo.models.RoutesItem;
 import direction.com.mapdirectiondemo.models.StepsItem;
+import direction.com.mapdirectiondemo.network.DirectionAPI;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -27,10 +28,11 @@ public class MainViewModel extends BaseObservable {
 
     public static final int SOURCE_LOCATION = 1;
     public static final int DESTINATION_LOCATION = 2;
-    public ObservableField<String> sourceName = new ObservableField<>();
-    public ObservableField<String> destinationName = new ObservableField<>();
-    private MutableLiveData<ArrayList<LatLng>> pollyPoints = new MutableLiveData<>();
-    private MutableLiveData<Boolean> getDirectionCallListener = new MutableLiveData<>();
+    public ObservableField<String> sourceName;
+    public ObservableField<String> destinationName;
+    private MutableLiveData<ArrayList<LatLng>> pollyPoints;
+    private MutableLiveData<Boolean> getDirectionCallListener;
+    private DirectionAPI mDirectionAPI;
 
     public MutableLiveData<Boolean> getGetDirectionCallListener() {
         return getDirectionCallListener;
@@ -40,13 +42,18 @@ public class MainViewModel extends BaseObservable {
         this.getDirectionCallListener.setValue(getDirectionCallListener);
     }
 
-    private AppCompatActivity mActivity;
+    private MainActivity mActivity;
 
-    public MainViewModel(AppCompatActivity activity) {
+    public MainViewModel(MainViewModelComponent modelComponent) {
 
-        mActivity = activity;
-        sourceName.set(activity.getString(R.string.source_default_name));
-        destinationName.set(activity.getString(R.string.destination_default_name));
+        mActivity = modelComponent.getMainActivity();
+        sourceName = modelComponent.sourceName();
+        destinationName = modelComponent.destinationName();
+        mDirectionAPI = App.getInstance().getDirectionAPI();
+        pollyPoints = modelComponent.pollyPoints();
+        getDirectionCallListener = modelComponent.getDirectionCallListener();
+        sourceName.set(mActivity.getString(R.string.source_default_name));
+        destinationName.set(mActivity.getString(R.string.destination_default_name));
 
     }
 
@@ -80,14 +87,14 @@ public class MainViewModel extends BaseObservable {
 
     public void fetchSource(View view) {
 
-        ((MainActivity) mActivity).clearMap();
-        ((MainActivity) mActivity).searchLocation(SOURCE_LOCATION);
+        mActivity.clearMap();
+        mActivity.searchLocation(SOURCE_LOCATION);
 
     }
 
     public void fetchDestination(View view) {
 
-        ((MainActivity) mActivity).searchLocation(DESTINATION_LOCATION);
+        mActivity.searchLocation(DESTINATION_LOCATION);
 
     }
 
@@ -95,9 +102,7 @@ public class MainViewModel extends BaseObservable {
     public void getDirection(LatLng source, LatLng destination) {
 
 
-        App
-                .getInstance()
-                .getDirectionAPI().getDirections(source.latitude + "," + source.longitude, destination.latitude + "," + destination.longitude, false)
+        mDirectionAPI.getDirections(source.latitude + "," + source.longitude, destination.latitude + "," + destination.longitude, false)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(directionResult -> {

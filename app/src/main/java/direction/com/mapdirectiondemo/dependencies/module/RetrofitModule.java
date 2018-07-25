@@ -3,7 +3,7 @@ package direction.com.mapdirectiondemo.dependencies.module;
 import dagger.Module;
 import dagger.Provides;
 import direction.com.mapdirectiondemo.constants.AppConstants;
-import direction.com.mapdirectiondemo.dependencies.scopes.SingletonScope;
+import direction.com.mapdirectiondemo.dependencies.scopes.SingletonServiceScope;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitModule {
 
     @Provides
-    @SingletonScope
+    @SingletonServiceScope
     public Retrofit getRetrofit(String baseUrl
             , GsonConverterFactory gsonConverterFactory
             , RxJava2CallAdapterFactory rxJava2CallAdapterFactory
@@ -29,19 +29,19 @@ public class RetrofitModule {
     }
 
     @Provides
-    @SingletonScope
+    @SingletonServiceScope
     public OkHttpClient getOkHttpClient() {
         return new OkHttpClient();
     }
 
     @Provides
-    @SingletonScope
+    @SingletonServiceScope
     public GsonConverterFactory getGsonConverterFactory() {
         return GsonConverterFactory.create();
     }
 
     @Provides
-    @SingletonScope
+    @SingletonServiceScope
     public RxJava2CallAdapterFactory getRxJava2CallAdapterFactory() {
         return RxJava2CallAdapterFactory.create();
     }

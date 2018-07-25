@@ -2,7 +2,7 @@ package direction.com.mapdirectiondemo.dependencies.module;
 
 import dagger.Module;
 import dagger.Provides;
-import direction.com.mapdirectiondemo.dependencies.scopes.SingletonScope;
+import direction.com.mapdirectiondemo.dependencies.scopes.SingletonServiceScope;
 import direction.com.mapdirectiondemo.network.DirectionAPI;
 import retrofit2.Retrofit;
 
@@ -10,7 +10,7 @@ import retrofit2.Retrofit;
 public class ServiceModule {
 
     @Provides
-    @SingletonScope
+    @SingletonServiceScope
     DirectionAPI getDirectionAPI(Retrofit retrofit) {
         return retrofit.create(DirectionAPI.class);
     }

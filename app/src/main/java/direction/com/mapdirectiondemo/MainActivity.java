@@ -3,8 +3,8 @@ package direction.com.mapdirectiondemo;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -17,17 +17,18 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
 import direction.com.mapdirectiondemo.databinding.ActivityMainBinding;
+import direction.com.mapdirectiondemo.dependencies.components.DaggerMainViewModelComponent;
+import direction.com.mapdirectiondemo.dependencies.components.MainViewModelComponent;
+import direction.com.mapdirectiondemo.dependencies.module.MainViewModelModule;
 import direction.com.mapdirectiondemo.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -48,7 +49,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        mMainViewModel = new MainViewModel(this);
+        MainViewModelComponent component = DaggerMainViewModelComponent
+                .builder()
+                .mainViewModelModule(new MainViewModelModule(this))
+                .build();
+        mMainViewModel = new MainViewModel(component);
         mSupportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mSupportMapFragment.getMapAsync(this);
         mActivityMainBinding.setMainModel(mMainViewModel);
