@@ -20,6 +20,10 @@ public interface MainViewModelComponent {
 
     ObservableField<String> destinationName();
 
+    ObservableField<Boolean> isDirectionButtonEnabled();
+
+    ObservableField<Boolean> isRefreshing();
+
     MutableLiveData<ArrayList<LatLng>> pollyPoints();
 
     MutableLiveData<Boolean> getDirectionCallListener();

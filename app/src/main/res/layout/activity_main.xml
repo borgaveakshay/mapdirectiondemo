@@ -10,70 +10,78 @@
             type="direction.com.mapdirectiondemo.viewmodel.MainViewModel" />
     </data>
 
-    <RelativeLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        android:layout_height="wrap_content"
+        app:refreshing="@{mainModel.isRefreshing}">
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MainActivity" />
+            tools:context=".MainActivity">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MainActivity" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/source_layout_hieght"
-                android:layout_marginLeft="@dimen/places_layout_margin_left"
-                android:layout_marginRight="@dimen/places_layout_margin_right"
-                android:layout_marginTop="@dimen/default_top_margin"
-                android:background="@color/colorWhite"
-                android:onClick="@{mainModel::fetchSource}"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@={mainModel.sourceName}"
-                    android:textColor="@color/colorBlack" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/source_layout_hieght"
-                android:layout_marginLeft="@dimen/places_layout_margin_left"
-                android:layout_marginRight="@dimen/places_layout_margin_right"
-                android:layout_marginTop="@dimen/default_top_margin"
-                android:background="@color/colorWhite"
-                android:onClick="@{mainModel::fetchDestination}"
-                android:orientation="horizontal">>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@={mainModel.destinationName}"
-                    android:textColor="@color/colorBlack" />
-
-
-            </LinearLayout>
-
-            <Button
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:onClick="@{mainModel::getDirectionClicked}"
-                android:text="GET DIRECTION" />
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/source_layout_hieght"
+                    android:layout_marginLeft="@dimen/places_layout_margin_left"
+                    android:layout_marginRight="@dimen/places_layout_margin_right"
+                    android:layout_marginTop="@dimen/default_top_margin"
+                    android:background="@color/colorWhite"
+                    android:onClick="@{mainModel::fetchSource}"
+                    android:orientation="horizontal">
 
-    </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@={mainModel.sourceName}"
+                        android:textColor="@color/colorBlack" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/source_layout_hieght"
+                    android:layout_marginLeft="@dimen/places_layout_margin_left"
+                    android:layout_marginRight="@dimen/places_layout_margin_right"
+                    android:layout_marginTop="@dimen/default_top_margin"
+                    android:background="@color/colorWhite"
+                    android:onClick="@{mainModel::fetchDestination}"
+                    android:orientation="horizontal">>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@={mainModel.destinationName}"
+                        android:textColor="@color/colorBlack" />
+
+
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:enabled="@{mainModel.isDirectionButtonEnabled}"
+                    android:onClick="@{mainModel::getDirectionClicked}"
+                    android:text="GET DIRECTION" />
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </layout>

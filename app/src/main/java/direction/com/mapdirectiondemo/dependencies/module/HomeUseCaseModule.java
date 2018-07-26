@@ -4,13 +4,21 @@ import dagger.Module;
 import dagger.Provides;
 import direction.com.mapdirectiondemo.data.repositories.repoimpl.HomeRepoImpl;
 import direction.com.mapdirectiondemo.dependencies.scopes.HomeUseCaseScope;
+import direction.com.mapdirectiondemo.domain.interfaces.HomeScreenUseCase;
+import direction.com.mapdirectiondemo.domain.interfaces.implementations.HomeScreenUserCaseImpl;
 
 @Module
 public class HomeUseCaseModule {
 
     @Provides
     @HomeUseCaseScope
-    public HomeRepoImpl getRepository(){
+    public HomeScreenUseCase getRepository(HomeRepoImpl homeRepo){
+        return new HomeScreenUserCaseImpl(homeRepo);
+    }
+
+    @Provides
+    @HomeUseCaseScope
+    public HomeRepoImpl getHomeRepoImpl(){
         return new HomeRepoImpl();
     }
 }

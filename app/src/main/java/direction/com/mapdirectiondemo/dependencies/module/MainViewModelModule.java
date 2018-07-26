@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import dagger.Module;
 import dagger.Provides;
 import direction.com.mapdirectiondemo.MainActivity;
+import direction.com.mapdirectiondemo.dependencies.qualifires.DirectionQualifier;
 import direction.com.mapdirectiondemo.dependencies.qualifires.SorceNameQualifier;
 import direction.com.mapdirectiondemo.dependencies.scopes.MainViewModelScope;
 
@@ -35,6 +36,23 @@ public class MainViewModelModule {
 
         return new ObservableField<>();
     }
+
+
+    @Provides
+    @MainViewModelScope
+    @DirectionQualifier
+    public ObservableField<Boolean> isDirectionButtonEnabled() {
+
+        return new ObservableField<>();
+    }
+
+    @Provides
+    @MainViewModelScope
+    public ObservableField<Boolean> isRefreshing() {
+
+        return new ObservableField<>();
+    }
+
 
     @Provides
     @MainViewModelScope

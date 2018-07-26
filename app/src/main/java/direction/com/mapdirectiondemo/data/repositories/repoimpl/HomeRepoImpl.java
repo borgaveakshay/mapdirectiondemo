@@ -6,8 +6,7 @@ import direction.com.mapdirectiondemo.Util.App;
 import direction.com.mapdirectiondemo.data.repositories.HomeRepository;
 import direction.com.mapdirectiondemo.models.DirectionResult;
 import direction.com.mapdirectiondemo.network.DirectionAPI;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.Observable;
 
 public class HomeRepoImpl implements HomeRepository {
 
@@ -21,16 +20,7 @@ public class HomeRepoImpl implements HomeRepository {
 
     @SuppressLint("CheckResult")
     @Override
-    public DirectionResult getDirectionResult(String source, String destination) {
-
-        mDirectionAPI.getDirections(source, destination, false)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> {
-                            mDirectionResult = result;
-                        },
-                        error -> {
-                        });
-        return mDirectionResult;
+    public Observable<DirectionResult> getDirectionResult(String source, String destination) {
+        return mDirectionAPI.getDirections(source, destination, false);
     }
 }

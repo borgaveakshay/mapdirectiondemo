@@ -1,9 +1,11 @@
 package direction.com.mapdirectiondemo.domain.interfaces;
 
+
 import direction.com.mapdirectiondemo.models.DirectionResult;
+import io.reactivex.Observable;
 
 public interface HomeScreenUseCase extends BaseUseCase{
 
-    DirectionResult getDirectionResult(String source, String destination);
+    Observable<DirectionResult> getDirectionResult(String source, String destination);
 
 }
