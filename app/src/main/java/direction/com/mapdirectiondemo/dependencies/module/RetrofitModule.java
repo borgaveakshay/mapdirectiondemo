@@ -5,6 +5,7 @@ import dagger.Provides;
 import direction.com.mapdirectiondemo.constants.AppConstants;
 import direction.com.mapdirectiondemo.dependencies.scopes.SingletonServiceScope;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -28,10 +29,23 @@ public class RetrofitModule {
                 .build();
     }
 
+
     @Provides
     @SingletonServiceScope
-    public OkHttpClient getOkHttpClient() {
-        return new OkHttpClient();
+    public HttpLoggingInterceptor getHttpLoggingInterceptor() {
+
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        return httpLoggingInterceptor;
+    }
+
+    @Provides
+    @SingletonServiceScope
+    public OkHttpClient getOkHttpClient(HttpLoggingInterceptor httpLoggingInterceptor) {
+        return new OkHttpClient
+                .Builder()
+                .addInterceptor(httpLoggingInterceptor)
+                .build();
     }
 
     @Provides
@@ -47,6 +61,7 @@ public class RetrofitModule {
     }
 
     @Provides
+    @SingletonServiceScope
     public String getBaseUrl(){
         return AppConstants.RETRO_BASE_URL;
     }

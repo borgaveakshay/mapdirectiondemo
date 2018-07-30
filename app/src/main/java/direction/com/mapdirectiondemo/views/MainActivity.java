@@ -1,5 +1,6 @@
-package direction.com.mapdirectiondemo;
+package direction.com.mapdirectiondemo.views;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
+import direction.com.mapdirectiondemo.R;
 import direction.com.mapdirectiondemo.databinding.ActivityMainBinding;
 import direction.com.mapdirectiondemo.dependencies.components.DaggerHomeUseCaseComponent;
 import direction.com.mapdirectiondemo.dependencies.components.DaggerMainViewModelComponent;
@@ -53,14 +55,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        mMainViewModelComponent = DaggerMainViewModelComponent
-                .builder()
-                .mainViewModelModule(new MainViewModelModule(this))
-                .build();
+        mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        if (savedInstanceState == null) {
+            mUseCaseComponent = DaggerHomeUseCaseComponent.builder().build();
+            mMainViewModelComponent = DaggerMainViewModelComponent
+                    .builder()
+                    .mainViewModelModule(new MainViewModelModule(this))
+                    .build();
 
-        mUseCaseComponent = DaggerHomeUseCaseComponent.builder().build();
-
-        mMainViewModel = new MainViewModel(mMainViewModelComponent, mUseCaseComponent);
+            mMainViewModel.setmHomeUseCaseComponent(mUseCaseComponent);
+            mMainViewModel.setmMainViewModelComponent(mMainViewModelComponent);
+        }
+        mMainViewModel.initModel();
+        // mMainViewModel = new MainViewModel(mMainViewModelComponent, mUseCaseComponent);
         mSupportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mSupportMapFragment.getMapAsync(this);
         mActivityMainBinding.setMainModel(mMainViewModel);
@@ -141,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         if (mSourceMarker != null && mDestinationMarker != null) {
             zoomMap();
-
+            mMainViewModel.isDirectionButtonEnabled.set(true);
         }
     }
 

@@ -2,6 +2,7 @@ package direction.com.mapdirectiondemo.dependencies.module;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.databinding.ObservableField;
+import android.databinding.PropertyChangeRegistry;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 import dagger.Module;
 import dagger.Provides;
-import direction.com.mapdirectiondemo.MainActivity;
+import direction.com.mapdirectiondemo.views.MainActivity;
 import direction.com.mapdirectiondemo.dependencies.qualifires.DirectionQualifier;
 import direction.com.mapdirectiondemo.dependencies.qualifires.SorceNameQualifier;
 import direction.com.mapdirectiondemo.dependencies.scopes.MainViewModelScope;
@@ -72,6 +73,12 @@ public class MainViewModelModule {
     @MainViewModelScope
     public MainActivity getMainActivity() {
         return mainActivity;
+    }
+
+    @Provides
+    @MainViewModelScope
+    public PropertyChangeRegistry getPropertyChangeRegistry(){
+        return new PropertyChangeRegistry();
     }
 
 }

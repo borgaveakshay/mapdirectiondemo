@@ -2,7 +2,8 @@ package direction.com.mapdirectiondemo.data.repositories.repoimpl;
 
 import android.annotation.SuppressLint;
 
-import direction.com.mapdirectiondemo.Util.App;
+import javax.inject.Inject;
+
 import direction.com.mapdirectiondemo.data.repositories.HomeRepository;
 import direction.com.mapdirectiondemo.models.DirectionResult;
 import direction.com.mapdirectiondemo.network.DirectionAPI;
@@ -10,12 +11,12 @@ import io.reactivex.Observable;
 
 public class HomeRepoImpl implements HomeRepository {
 
+    @Inject
     DirectionAPI mDirectionAPI;
-    DirectionResult mDirectionResult;
 
+    @Inject
     public HomeRepoImpl() {
-
-        mDirectionAPI = App.getInstance().getDirectionAPI();
+        // primary Constructor for Injection
     }
 
     @SuppressLint("CheckResult")
